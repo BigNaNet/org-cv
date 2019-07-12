@@ -193,6 +193,15 @@ as a communication channel."
             (org-cv-utils--format-time-window from-date to-date)
             title employer location note contents)))
 
+(defun org-moderncv--format-cvthesis(headline contents info)
+  "Format HEADLINE as cvline.
+CONTENTS holds the contents of the headline.
+INFO is a plistused as a communication channel"
+  (let* ((title(org-export-data (org-element-property :title headline) info))
+         (supervisors (org-element-property :SUPERVISORS headline))
+         (description (org-element-property :DESCRIPTION headline)))
+    (format "\\cvitem{\\textbf{title}}{\emph{%s}}\n\\cvitem{\\textbf{supervisors}}{%s}\n\\cvitem{\\textbf{description}}{%s}"
+            title supervisors description)))
 
 ;;;; Headline
 (defun org-moderncv-headline (headline contents info)
@@ -206,6 +215,8 @@ as a communication channel."
        ;; is a cv entry
        ((equal environment "cventry")
         (org-moderncv--format-cventry headline contents info))
+       ((equal environment "cvthesis")
+        (org-moderncv--format-cvthesis headline contents info))
        ((org-export-with-backend 'latex headline contents info))))))
 
 (provide 'ox-moderncv)
