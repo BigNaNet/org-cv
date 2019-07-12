@@ -196,12 +196,11 @@ as a communication channel."
 (defun org-moderncv--format-cvthesis(headline contents info)
   "Format HEADLINE as cvline.
 CONTENTS holds the contents of the headline.
-INFO is a plistused as a communication channel"
+INFO is a plist used as a communication channel"
   (let* ((title(org-export-data (org-element-property :title headline) info))
-         (supervisors (org-element-property :SUPERVISORS headline))
          (description (org-element-property :DESCRIPTION headline)))
-    (format "\\cvitem{\\textbf{title}}{\emph{%s}}\n\\cvitem{\\textbf{supervisors}}{%s}\n\\cvitem{\\textbf{description}}{%s}"
-            title supervisors description)))
+    (format "\\cvitem{\\textbf{title}}{\\emph{%s}}\n\\cvitem{\\textbf{supervisors}}{%s}\n"
+            title  description)))
 
 ;;;; Headline
 (defun org-moderncv-headline (headline contents info)
