@@ -199,8 +199,18 @@ CONTENTS holds the contents of the headline.
 INFO is a plist used as a communication channel"
   (let* ((title(org-export-data (org-element-property :title headline) info))
          (description (org-element-property :DESCRIPTION headline)))
-    (format "\\cvitem{\\textbf{title}}{\\emph{%s}}\n\\cvitem{\\textbf{supervisors}}{%s}\n"
+    (format "\\cvitem{\\textbf{Title}}{\\emph{%s}}\n\\cvitem{\\textbf{Description}}{%s}\n"
             title  description)))
+
+(defun org-moderncv--format-cvitemwcomment (headline contents info)
+  "Format HEADLINE as cvitemwcomment.
+CONTENTS holdsthe content of the headline.
+ INFO is aplist used as a communication channel."
+  (let* ((title (org-export-data (org-element-property :title headline) info))
+         (skill-level (org-element-property :SKILL headline))
+         (comment (or (org-element-property :COMMENT headline) "")))
+    (format "\\cvitemwithcomment{\\textbf{%s}}{%s}{%s}"
+            title skill-level comment)))
 
 ;;;; Headline
 (defun org-moderncv-headline (headline contents info)
@@ -216,6 +226,8 @@ as a communication channel."
         (org-moderncv--format-cventry headline contents info))
        ((equal environment "cvthesis")
         (org-moderncv--format-cvthesis headline contents info))
+       ((equal environment "cvitemwcomment")
+        (org-moderncv--format-cvitemwcomment headline contents info))
        ((org-export-with-backend 'latex headline contents info))))))
 
 (provide 'ox-moderncv)

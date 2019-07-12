@@ -5,7 +5,11 @@
 #+HUGO_BASE_DIR: doc
 #+HUGO_SECTION: post
 #+HUGO_WEIGHT: auto
-
+* The Fork
+  Found this awesome exporter over the internet. As a new /afficionato/ of
+Gnu/Emacs and particularly org mode I felt that it was a neet little side
+project to dig into lisp and org mode. Feel free to clone or fork it or check
+out the original.
 * Goal: Export backend for CV
   :PROPERTIES:
   :EXPORT_FILE_NAME: goal
