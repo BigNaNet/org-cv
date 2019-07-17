@@ -6,8 +6,8 @@
 #+HUGO_SECTION: post
 #+HUGO_WEIGHT: auto
 * The Fork
-  Found this awesome exporter, /kudos/ to *Titan-C*. As a new /afficionato/ of
-Gnu/Emacs and particularly org mode I felt that it was a neat little side
+Found this awesome exporter, /kudos/ to *Titan-C*.
+As a new /afficionato/ of Gnu/Emacs and particularly org mode I felt that it was a neat little side
 project to dig into elisp and org mode.
 * Goal: Export backend for CV
   :PROPERTIES:

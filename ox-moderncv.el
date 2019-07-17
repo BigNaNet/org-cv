@@ -64,6 +64,7 @@
     (:github "GITHUB" nil nil parse)
     (:linkedin "LINKEDIN" nil nil parse)
     (:with-email nil "email" t t)
+    (:quote "QUOTE" nil nil t)
     )
   :translate-alist '((template . org-moderncv-template)
                      (headline . org-moderncv-headline)))
@@ -126,6 +127,8 @@ holding export options."
          (format "\\address%s\n" (mapconcat (lambda (line)
                                               (format "{%s}" line))
                                             (split-string address "\n") ""))))
+
+
      (mapconcat (lambda (social-network)
                   (let ((network (org-export-data
                                   (plist-get info (car social-network)) info)))
@@ -140,6 +143,10 @@ holding export options."
      ;; Date.
      (let ((date (and (plist-get info :with-date) (org-export-get-date info))))
        (format "\\date{%s}\n" (org-export-data date info)))
+
+     ;; quote
+     (let ((quot (org-export-data (plist-get info :quote) info)))
+       (when quot (format "\\quote{%s}\n" quot)))
 
      ;; Title and subtitle.
      (let* ((subtitle (plist-get info :subtitle))
@@ -191,7 +198,7 @@ as a communication channel."
          (note (or (org-element-property :NOTE headline) "")))
     (format "\\cventry{\\textbf{%s}}{%s}{%s}{%s}{%s}{%s}\n"
             (org-cv-utils--format-time-window from-date to-date)
-            title employer location note contents)))
+            title employer location note contents )))
 
 (defun org-moderncv--format-cvthesis(headline contents info)
   "Format HEADLINE as cvline.
@@ -204,7 +211,7 @@ INFO is a plist used as a communication channel"
 
 (defun org-moderncv--format-cvitemwcomment (headline contents info)
   "Format HEADLINE as cvitemwcomment.
-CONTENTS holdsthe content of the headline.
+CONTENTS holds the content of the headline.
  INFO is aplist used as a communication channel."
   (let* ((title (org-export-data (org-element-property :title headline) info))
          (skill-level (org-element-property :SKILL headline))
@@ -212,6 +219,17 @@ CONTENTS holdsthe content of the headline.
     (format "\\cvitemwithcomment{\\textbf{%s}}{%s}{%s}"
             title skill-level comment)))
 
+(defun org-moderncv--format-cvdoubleitem(headline contents info)
+  "Format HEADLINE as cvdoubleitem.
+CONTENTS holds the content of the headline.
+ INFO is aplist used as a communication channel."
+  (let* ((title (org-export-data(org-element-property :title headline) info))
+         (skill1 (org-element-property :SKILL1 headline))
+         (level1 (or (org-element-property :LEVEL1 headline) ""))
+         (skill2 (org-element-property :SKILL2 headline))
+         (level2 (or (org-element-property :LEVEL2 headline) "")))
+    (format "\\cvdoubleitem{%s}{%s}{%s}{%s}"
+            skill1 level1 skill2 level2)))
 ;;;; Headline
 (defun org-moderncv-headline (headline contents info)
   "Transcode HEADLINE element into moderncv code.
@@ -228,6 +246,8 @@ as a communication channel."
         (org-moderncv--format-cvthesis headline contents info))
        ((equal environment "cvitemwcomment")
         (org-moderncv--format-cvitemwcomment headline contents info))
+        ((equal environment "cvdoubleitem")
+        (org-moderncv--format-cvdoubleitem headline contents info))
        ((org-export-with-backend 'latex headline contents info))))))
 
 (provide 'ox-moderncv)
