@@ -230,6 +230,18 @@ CONTENTS holds the content of the headline.
          (level2 (or (org-element-property :LEVEL2 headline) "")))
     (format "\\cvdoubleitem{%s}{%s}{%s}{%s}"
             skill1 level1 skill2 level2)))
+
+(defun org-moderncv--format-letter(headline contents info)
+  "Format HEADLINE as cvdoubleitem.
+CONTENTS holds the content of the headline.
+ INFO is aplist used as a communication channel."
+  (let* ((title (org-export-data(org-element-property :title headline) info))
+         (recipient (org-element-property :RECIPIENT headline))
+         (recipient2 (org-element-property :RECIPIENT2 headline))
+         (opening (org-element-property :OPENING headline))
+         (date (org-element-property :DATE headline)))
+    (format "\\clearpage\n\\recipient{%s}{%s}\n\\date{%s}\n\\opening{%s}\n\\closing{Yours faithfully,}\n\\makelettertitle\n%s\n\\makeletterclosing\n"
+            recipient recipient2 (org-cv-utils-org-timestamp-to-stringdate date) opening contents)))
 ;;;; Headline
 (defun org-moderncv-headline (headline contents info)
   "Transcode HEADLINE element into moderncv code.
@@ -246,8 +258,10 @@ as a communication channel."
         (org-moderncv--format-cvthesis headline contents info))
        ((equal environment "cvitemwcomment")
         (org-moderncv--format-cvitemwcomment headline contents info))
-        ((equal environment "cvdoubleitem")
+       ((equal environment "cvdoubleitem")
         (org-moderncv--format-cvdoubleitem headline contents info))
+       ((equal environment "letter")
+        (org-moderncv--format-letter headline contents info))
        ((org-export-with-backend 'latex headline contents info))))))
 
 (provide 'ox-moderncv)

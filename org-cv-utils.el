@@ -54,5 +54,21 @@ in case TO-DATE is nil return Present"
    (if (not to-date) "Present"
      (org-cv-utils-org-timestamp-to-shortdate to-date))))
 
+(defun org-cv-utils-org-timestamp-to-stringdate (date_str)
+"Format orgmode timestamp DATE_STR  into a short form date.
+Other strings are just returned unmodified
+
+e.g. <2002-08-12 Mon> => Aug 2012
+today => today"
+  (if (string-match (org-re-timestamp 'active) date_str)
+      (let* ((abbreviate 't)
+             (dte (org-parse-time-string date_str))
+             (day (nth 3 dte))
+             (month (nth 4 dte))
+             (year (nth 5 dte))) ;;'(02 07 2015)))
+        (concat
+         (calendar-month-name month ) " "(number-to-string day) ", " (number-to-string year)))
+    date_str))
+
 (provide 'org-cv-utils)
 ;;; org-cv-utils ends here
